@@ -36,9 +36,7 @@
     "format": "prettier --write .",
     "prepare": "husky install"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+  "_moduleAliases": {
+    "@src": "./src"
   }
 }
