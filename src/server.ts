@@ -1,5 +1,6 @@
 import app from '@src/app'
-import getMongoDbClient from './db/getMongoDbClient'
+import getMongoDbClient from '@src/db/getMongoDbClient'
+import { scrapeLinkedInJobs } from '@src/scrappers/jobs/linkedInScrapper'
 
 const { PORT = 3000 } = process.env
 
@@ -8,5 +9,9 @@ app.listen(PORT, () => {
 })
 
 getMongoDbClient().catch((error) => {
+  console.error(error)
+})
+
+scrapeLinkedInJobs().catch((error) => {
   console.error(error)
 })
