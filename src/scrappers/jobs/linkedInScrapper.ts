@@ -1,9 +1,9 @@
 import { type Job } from '../utils/types'
 import fetchHtml from '../utils/fetchHtml'
 
-export const scrapeLinkedInJobs = async (): Promise<Job[]> => {
+export const scrapeLinkedInJobs = async (searchQuery: string): Promise<Job[]> => {
   const jobs: Job[] = []
-  const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${searchQuery}`
+  const searchUrl = `https://www.linkedin.com/jobs/search?${searchQuery}`
   const pageHtml = await fetchHtml(searchUrl)
 
   // todo: scrape jobs from linkedin

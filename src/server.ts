@@ -8,10 +8,12 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
 })
 
+// test db connection
 getMongoDbClient().catch((error) => {
   console.error(error)
 })
 
-scrapeLinkedInJobs().catch((error) => {
+// test linkedin scrapper
+scrapeLinkedInJobs('keywords=Python Developer&location=European Union').catch((error) => {
   console.error(error)
 })

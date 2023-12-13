@@ -31,13 +31,13 @@ const createMongoDbClient = async (): Promise<typeof mongoose> => {
 }
 
 export const closeMongoDbClient = async (): Promise<void> => {
-  if (mongoDbClient !== undefined) {
+  if (mongoDbClient) {
     await mongoDbClient.connection.close()
   }
 }
 
 const getMongoDbClient = async (): Promise<typeof mongoose> => {
-  if (mongoDbClient !== undefined) {
+  if (mongoDbClient) {
     return mongoDbClient
   }
 
