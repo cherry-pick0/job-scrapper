@@ -7,7 +7,7 @@ const parseHtml = (html: string): Job[] => {
   return [mock]
 }
 
-export const scrapeLinkedInJobs = async (searchQuery: string): Promise<ScrappedJobData> => {
+export const scrapeJobs = async (searchQuery: string): Promise<ScrappedJobData> => {
   const searchUrl = `https://www.linkedin.com/jobs/search?${searchQuery}`
   // todo fetch and parse real html
   const pageHtml = await fetchHtml(searchUrl)
