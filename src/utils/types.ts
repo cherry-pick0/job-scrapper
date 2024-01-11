@@ -7,9 +7,13 @@ export enum Site {
   Indeed = 'Indeed'
 }
 
-export type ScrappedJobData = {
+export type SearchParams = {
   site: Site
   searchQuery: string
+}
+
+export type ScrappedJobData = {
+  searchParams: SearchParams
   results: Job[]
   browserPID?: number
 }
