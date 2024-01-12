@@ -14,5 +14,5 @@ export const scrapeJobs = async (searchQuery: string): Promise<ScrappedJobData> 
   const results = parseHtml(pageHtml)
   const site = Site.LinkedIn
 
-  return { site, searchQuery, results }
+  return { searchParams: { site, searchQuery }, results }
 }
