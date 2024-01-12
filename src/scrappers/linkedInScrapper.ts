@@ -1,5 +1,5 @@
-import { type Job, type ScrappedJobData, Site } from '../../utils/types'
-import fetchHtml from '../utils/fetchHtml'
+import { type Job, type ScrappedJobData, Site } from '../utils/types'
+import fetchHtml from './utils/fetchHtml'
 
 const parseHtml = (html: string): Job[] => {
   // todo parse html
