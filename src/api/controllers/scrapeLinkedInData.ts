@@ -12,7 +12,7 @@ const scrapeLinkedInJobsController = async (req: Request, res: Response) => {
     }
 
     // todo validate body params
-    await queue.add(req.body, { delay: 2000 })
+    await queue.add(req.body, { delay: 5000 })
 
     res.status(202).send({ message: 'Action accepted' })
   } catch (e) {
