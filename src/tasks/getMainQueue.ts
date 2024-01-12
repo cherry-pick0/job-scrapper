@@ -16,7 +16,7 @@ const createMainQueue = async (queueName: string): Promise <QueueType> => {
     })
     queue.on('error', (error) => { console.error('Bull error:', error) })
 
-    await queue.process(async (job) => {
+    queue.process(async (job) => {
       console.log('Processing job:', job.data)
 
       if (job.data.task === 'scrapeLinkedInJobsTask') {
@@ -26,7 +26,7 @@ const createMainQueue = async (queueName: string): Promise <QueueType> => {
       }
 
       await Promise.resolve()
-    })
+    }).catch((error) => { console.error('Bull process error:', error) })
 
     return queue
   } catch (error) {
