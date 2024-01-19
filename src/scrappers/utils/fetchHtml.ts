@@ -23,6 +23,26 @@ const scrollPage = async (page: Page) => {
   })
 }
 
+const getJobs = async (page: Page) => {
+  return await page.$$eval('.jobs-search__results-list li', lis => lis.map(li => {
+    if (!li) return null
+
+    const jobTitle = li.querySelector('.base-search-card__title')?.textContent?.trim()
+    const jobLink = li.querySelector('.base-card__full-link')?.getAttribute('href')?.trim()
+    const companyName = li.querySelector('.base-search-card__subtitle a')?.textContent?.trim()
+    const location = li.querySelector('.job-search-card__location')?.textContent?.trim()
+    const postingDate = li.querySelector('.job-search-card__listdate')?.textContent?.trim()
+
+    return {
+      jobTitle,
+      jobLink,
+      companyName,
+      location,
+      postingDate
+    }
+  }))
+}
+
 // todo optional: store puppeteer browser instances in cache or db
 const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
   // Open the headless browser
@@ -42,7 +62,7 @@ const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
   await page.content()
 
   // Wait for the jobs list to be loaded
-  await page.waitForSelector('.jobs-search__results-list', { timeout: 1000 })
+  await page.waitForSelector('.jobs-search__results-list', { timeout: 2000 })
 
   // Fetch the HTML of the jobs list
   const pageHtml = await page.evaluate(() => {
