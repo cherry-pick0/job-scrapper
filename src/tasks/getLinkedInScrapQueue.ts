@@ -1,6 +1,6 @@
 import Queue, { type Queue as QueueType } from 'bull'
 import { MAIN_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './queueConfig'
-import { scrapeJobs } from '../scrappers/linkedInScrapper'
+import { scrapeJobs } from '@src/scrappers/linkedin'
 import saveScrappedJobData from '@src/services/saveScrappedJobData'
 
 let linkedInScrapQueue: QueueType
@@ -19,8 +19,6 @@ const createLinkedInScrapQueue = async (queueName: string): Promise <QueueType> 
       console.log('Queue process task:', task.id, task.data)
       const result = await scrapeJobs(JSON.stringify(task.data))
       await saveScrappedJobData(result)
-
-      await Promise.resolve()
     }).catch((error) => { console.error('Queue process error:', error) })
 
     return queue

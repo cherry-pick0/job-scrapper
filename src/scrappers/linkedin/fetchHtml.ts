@@ -23,26 +23,6 @@ const scrollPage = async (page: Page) => {
   })
 }
 
-const getJobs = async (page: Page) => {
-  return await page.$$eval('.jobs-search__results-list li', lis => lis.map(li => {
-    if (!li) return null
-
-    const jobTitle = li.querySelector('.base-search-card__title')?.textContent?.trim()
-    const jobLink = li.querySelector('.base-card__full-link')?.getAttribute('href')?.trim()
-    const companyName = li.querySelector('.base-search-card__subtitle a')?.textContent?.trim()
-    const location = li.querySelector('.job-search-card__location')?.textContent?.trim()
-    const postingDate = li.querySelector('.job-search-card__listdate')?.textContent?.trim()
-
-    return {
-      jobTitle,
-      jobLink,
-      companyName,
-      location,
-      postingDate
-    }
-  }))
-}
-
 // todo optional: store puppeteer browser instances in cache or db
 const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
   // Open the headless browser
@@ -76,38 +56,10 @@ const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
   await page.close()
   await browser.close()
   console.log('Browser Closed')
+  // Close the page and browser
+  // await new Promise(() => setTimeout(() => { console.log('done waiting') }, 2000))
 
   return pageHtml
 }
-
-// mock html
-/*
-const fetchHtml = async (url: string): Promise<string> => {
-  const mockHtml = `
-  <!DOCTYPE html>
-  <html>
-  <head>
-      <title>Job Listings</title>
-  </head>
-  <body>
-
-      <h1>Job Listings</h1>
-
-      <div class="job-listing">
-          <h2 class="job-title">Software Engineer</h2>
-          <p class="job-company">Company: TechCorp</p>
-          <p class="job-location">Location: San Francisco, CA</p>
-      </div>
-
-      <div class="job-listing">
-          <h2 class="job-title">Graphic Designer</h2>
-          <p class="job-company">Company: CreativeStudio</p>
-          <p class="job-location">Location: New York, NY</p>
-      </div>
-  </body>
-  </html>
-  `
-  return mockHtml
-} */
 
 export default fetchHtml

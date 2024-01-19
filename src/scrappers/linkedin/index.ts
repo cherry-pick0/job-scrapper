@@ -1,5 +1,5 @@
-import { type Job, type ScrappedJobData, Site } from '../utils/types'
-import fetchHtml from './utils/fetchHtml'
+import { type Job, type ScrappedJobData, Site } from '@src/utils/types'
+import fetchHtml from './fetchHtml'
 import { JSDOM } from 'jsdom'
 
 function parseHtml (htmlString: string) {
