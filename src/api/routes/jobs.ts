@@ -1,9 +1,9 @@
 import express from 'express'
-import scrapeLinkedInData from '@src/api/controllers/scrapeLinkedInData'
-import getScrappedLinkedInData from '@src/services/getScrappedLinkedInData'
+import scrapeLinkedInJobsController from '@src/api/controllers/scrapeLinkedInJobsController'
+import getScrappedLinkedInJobsController from '@src/api/controllers/getScrappedLinkedInJobsController'
 
 const router = express.Router()
-router.post('/scrape/linkedin', scrapeLinkedInData)
-router.get('/linkedin-jobs', getScrappedLinkedInData)
+router.post('/scrape/linkedin', scrapeLinkedInJobsController)
+router.get('/linkedin-jobs', getScrappedLinkedInJobsController)
 
 export default router

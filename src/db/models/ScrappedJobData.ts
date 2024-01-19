@@ -17,7 +17,11 @@ const scrappedJobDataSchema = new mongoose.Schema({
     required: true
   },
   results: [jobSchema],
-  browserPID: Number
+  browserPID: Number,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 })
 
 const ScrappedJobData = mongoose.model('ScrappedJobData', scrappedJobDataSchema)
