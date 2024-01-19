@@ -1,5 +1,9 @@
 export type Job = {
   title: string
+  link: string
+  company: string
+  location: string
+  postingDate: string
 }
 
 export enum Site {
