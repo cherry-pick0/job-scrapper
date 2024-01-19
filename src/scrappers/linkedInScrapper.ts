@@ -8,7 +8,8 @@ const parseHtml = (html: string): Job[] => {
 }
 
 export const scrapeJobs = async (searchQuery: string): Promise<ScrappedJobData> => {
-  const searchUrl = `https://www.linkedin.com/jobs/search?${searchQuery}`
+  // const searchUrl = `https://www.linkedin.com/jobs/search?${searchQuery}`
+  const searchUrl = 'https://www.linkedin.com/jobs/search'
   // todo fetch and parse real html
   const pageHtml = await fetchHtml(searchUrl)
   const results = parseHtml(pageHtml)

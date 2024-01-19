@@ -1,64 +1,58 @@
 import puppeteer from 'puppeteer'
+import type { Page } from 'puppeteer'
+
+const scrollPage = async (page: Page) => {
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve, reject) => {
+      let totalHeight = 0
+      let scrollCount = 0
+      const maxScrolls = 5
+      const distance = 200 // should be less than or equal to window.innerHeight
+      const timer = setInterval(() => {
+        const scrollHeight = document.body.scrollHeight
+        window.scrollBy(0, distance)
+        totalHeight += distance
+        scrollCount++
+
+        if (scrollCount >= maxScrolls || totalHeight >= scrollHeight) {
+          clearInterval(timer)
+          resolve()
+        }
+      }, 1000)
+    })
+  })
+}
 
 // todo optional: store puppeteer browser instances in cache or db
 const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
-  const browser = await puppeteer.launch({ headless: true, args })
+  const browser = await puppeteer.launch({ headless: false, args })
   const page = await browser.newPage()
+  await page.setViewport({ width: 1280, height: 800 })
 
   // Go to url
   await page.goto(url)
 
-  // Scroll/click to see more jobs
-
-  // Selector using aria-label
-  /* const selector = 'button[aria-label="See more jobs"]'
-
-  for (let i = 0; i < 3; i++) {
-    // Check if the button is available and visible
-    const buttonVisible = await page.evaluate(selector => {
-      const btn = document.querySelector(selector)
-      return btn
-    }, selector)
-
-    if (buttonVisible) {
-      // Wait for the button to be loaded
-      await page.waitForSelector(selector, { visible: true })
-
-      // Click the button
-      await page.click(selector)
-
-      // Wait for necessary loading or navigation after the click
-      // (e.g., page.waitForNavigation() or page.waitForTimeout())
-    } else {
-      // Break the loop if the button is not visible or not present
-      break
-    }
-
-    // Optional: wait a bit between clicks to simulate user behavior or wait for content loading
-    await new Promise(() => setTimeout(() => { console.log('done waiting') }, 1000))
-  } */
+  // Scroll to the bottom of the page
+  await scrollPage(page)
+  console.log('done scrolling')
 
   // Fetch the page content
+  await page.content()
 
   // Wait for the jobs list to be loaded
-  const test = await page.content()
-  console.log(test.length)
-
-  await page.waitForSelector('.jobs-search__results-list', { timeout: 10000 })
+  await page.waitForSelector('.jobs-search__results-list', { timeout: 1000 })
 
   // Fetch the HTML of the jobs list
   const pageHtml = await page.evaluate(() => {
     const jobsList = document.querySelector('.jobs-search__results-list')
     return jobsList ? jobsList.innerHTML : ''
   })
-
-  console.log(pageHtml)
-
-  // await page.screenshot({ path: 'example.png' })
+  // await page.screenshot({ path: 'fetchHtml.png' })
 
   // Close the page and browser
+  // await new Promise(() => setTimeout(() => { console.log('done waiting') }, 2000))
   await page.close()
   await browser.close()
   console.log('Browser Closed')

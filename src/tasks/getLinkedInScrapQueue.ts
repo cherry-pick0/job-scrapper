@@ -16,6 +16,7 @@ const createLinkedInScrapQueue = async (queueName: string): Promise <QueueType> 
     queue.on('error', (error) => { console.error('Bull error:', error) })
 
     queue.process(async (task) => {
+      console.log('Queue process task:', task.id, task.data)
       const result = await scrapeJobs(JSON.stringify(task.data))
       await saveScrappedJobData(result)
 
