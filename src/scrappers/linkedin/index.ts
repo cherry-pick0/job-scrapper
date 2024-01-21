@@ -30,7 +30,7 @@ function parseHtml (htmlString: string) {
 
 export const scrapeJobs = async (searchQuery: string): Promise<ScrappedJobData> => {
   // const searchUrl = `https://www.linkedin.com/jobs/search?${searchQuery}`
-  const searchUrl = 'https://www.linkedin.com/jobs/search'
+  const searchUrl = 'https://www.linkedin.com/jobs/search?keywords=Python%20Developer&location=United%20Kingdom&f_WT=2'
   // todo fetch and parse real html
   const pageHtml = await fetchHtml(searchUrl)
   const results = parseHtml(pageHtml)
