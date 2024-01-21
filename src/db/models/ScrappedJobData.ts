@@ -3,7 +3,8 @@ import mongoose from 'mongoose'
 const jobSchema = new mongoose.Schema({
   title: String,
   company: String,
-  location: String
+  location: String,
+  link: String
 })
 
 const scrappedJobDataSchema = new mongoose.Schema({
