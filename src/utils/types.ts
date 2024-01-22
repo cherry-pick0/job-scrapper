@@ -1,4 +1,5 @@
 export type Job = {
+  linkedInID: string
   title: string
   link: string
   company: string

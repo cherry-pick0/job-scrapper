@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
 
 const jobSchema = new mongoose.Schema({
+  linkedInID: String,
   title: String,
   company: String,
   location: String,
-  link: String
+  link: String,
+  postingDate: Date
 })
 
 const scrappedJobDataSchema = new mongoose.Schema({

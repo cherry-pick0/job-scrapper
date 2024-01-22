@@ -6,8 +6,8 @@ const scrollPage = async (page: Page) => {
     await new Promise<void>((resolve, reject) => {
       let totalHeight = 0
       let scrollCount = 0
-      const maxScrolls = 5
-      const distance = 200 // should be less than or equal to window.innerHeight
+      const maxScrolls = 2
+      const distance = 100 // should be less than or equal to window.innerHeight
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight
         window.scrollBy(0, distance)
@@ -18,15 +18,19 @@ const scrollPage = async (page: Page) => {
           clearInterval(timer)
           resolve()
         }
-      }, 1000)
+      }, 3000)
     })
   })
 }
 
 // todo optional: store puppeteer browser instances in cache or db
 const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
+  // wait a little before opening the browser
+  await new Promise(resolve => setTimeout(resolve, 3000))
+
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
+  console.log('opening browser')
   const browser = await puppeteer.launch({ headless: false, args })
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 800 })
