@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
-import { type Job } from '@src/utils/types'
+import { type Job, type JobDetails } from '@src/utils/types'
 
-export const parseSearchResultsHtml = async (searchRequestId: string, htmlString: string): Promise<Job[]> => {
+export const parseSearchResultsHtml = async (htmlString: string): Promise<Job[]> => {
   const dom = new JSDOM(htmlString)
   const document = dom.window.document
 
@@ -19,5 +19,16 @@ export const parseSearchResultsHtml = async (searchRequestId: string, htmlString
     jobs.push({ linkedInID, title, company, location, link, postingDate })
   })
 
-  return jobs
+  // return jobs
+  return [jobs[0]]
+}
+
+export const parseJobDetailsHtml = async (htmlString: string): Promise<JobDetails> => {
+  const dom = new JSDOM(htmlString)
+  const document = dom.window.document
+
+  const contentDiv = document.querySelector('.show-more-less-html__markup')
+  const textContent = contentDiv?.textContent ?? ''
+
+  return { level: '', fullDescription: textContent }
 }

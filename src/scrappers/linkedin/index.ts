@@ -2,8 +2,9 @@ import SearchRequestModel from '@src/db/models/SearchRequest'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
 import { fetchSearchResults, fetchJobDetails } from './fetchHtml'
 import addLinkedInJob from '@src/services/addLinkedInJob'
-import { parseSearchResultsHtml } from './parseHtml'
-import { getLinkedInJobDetailsScrapQueue } from '@src/tasks/getLinkedInJobDetailsScrapQueue'
+import { parseSearchResultsHtml, parseJobDetailsHtml } from './parseHtml'
+import getLinkedInJobDetailsScrapQueue from '@src/tasks/getLinkedInJobDetailsScrapQueue'
+import addLinkedInJobDetails from '@src/services/addLinkedInJobDetails'
 
 const queueJobDetailsScrap = async (jobId: string): Promise<void> => {
   const queue = await getLinkedInJobDetailsScrapQueue()
@@ -21,16 +22,22 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
   const searchUrl = 'https://www.linkedin.com/jobs/search?keywords=Python%20Developer&location=United%20Kingdom&f_WT=2'
   // todo fetch and parse real html
   const searchResultsHtmlString = await fetchSearchResults(searchUrl)
-  const jobs = await parseSearchResultsHtml(searchRequestId, searchResultsHtmlString)
+  const jobs = await parseSearchResultsHtml(searchResultsHtmlString)
 
   jobs.forEach(async (job) => {
-    const { linkedInID, title, company, location, link, postingDate } = job
-    const jobId = await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
-    await queueJobDetailsScrap(jobId)
+    try {
+      const { linkedInID, title, company, location, link, postingDate } = job
+      const jobId = await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
+      await queueJobDetailsScrap(jobId)
+    } catch (e) {
+      // todo handle error
+      console.log(e)
+    }
   })
 }
 
 export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => {
+  console.log('scrapeLinkedInJobDetails ', jobId)
   const job = await LinkedInJobModel.findById(jobId)
 
   if (!job) {
@@ -43,6 +50,8 @@ export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => 
     throw new Error('LinkedInJobModel link not found, scrapping failed')
   }
 
-  const details = await fetchJobDetails(jobLink)
-  console.log(details)
+  const htmlString = await fetchJobDetails(jobLink)
+  const details = await parseJobDetailsHtml(htmlString)
+  const jobDetailsId = await addLinkedInJobDetails(jobId, details)
+  console.log('saved jobDetails ', jobDetailsId)
 }

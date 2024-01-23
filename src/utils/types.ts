@@ -7,6 +7,11 @@ export type Job = {
   postingDate: string
 }
 
+export type JobDetails = {
+  level: string
+  fullDescription: string
+}
+
 export enum Site {
   LinkedIn = 'LinkedIn',
   Indeed = 'Indeed'

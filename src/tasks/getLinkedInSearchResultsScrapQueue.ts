@@ -37,7 +37,7 @@ const createLinkedInSearchResultsScrapQueue = async (queueName: string): Promise
   }
 }
 
-export const getLinkedInSearchResultsScrapQueue = async (): Promise<QueueType> => {
+const getLinkedInSearchResultsScrapQueue = async (): Promise<QueueType> => {
   if (linkedInSearchResultsScrapQueue) {
     return linkedInSearchResultsScrapQueue
   }
@@ -45,3 +45,5 @@ export const getLinkedInSearchResultsScrapQueue = async (): Promise<QueueType> =
   linkedInSearchResultsScrapQueue = await createLinkedInSearchResultsScrapQueue(LNK_SEARCH_SCRAP_QUEUE_NAME)
   return linkedInSearchResultsScrapQueue
 }
+
+export default getLinkedInSearchResultsScrapQueue

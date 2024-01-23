@@ -6,7 +6,7 @@ const scrollPage = async (page: Page) => {
     await new Promise<void>((resolve, reject) => {
       let totalHeight = 0
       let scrollCount = 0
-      const maxScrolls = 2
+      const maxScrolls = 1
       const distance = 100 // should be less than or equal to window.innerHeight
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight
@@ -64,6 +64,7 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
 }
 
 export const fetchJobDetails = async (url: string, proxy?: string): Promise<string> => {
+  console.log('fetchJobDetails ', url)
   // wait a little before opening the browser
   await new Promise(resolve => setTimeout(resolve, 3000))
 
@@ -79,19 +80,22 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
 
   // Fetch the page content
   await page.content()
+  console.log('done fetching content')
 
   // Wait for the job details to be loaded
-  await page.waitForSelector('.description__text description__text--rich', { timeout: 2000 })
+  await page.waitForSelector('.description__text', { timeout: 2000 })
+  console.log('description__text is available')
 
   const pageHtml = await page.evaluate(() => {
-    const jobDetails = document.querySelector('.description__text description__text--rich')
+    const jobDetails = document.querySelector('.description__text')
     return jobDetails ? jobDetails.innerHTML : ''
   })
 
   // Close the page and browser
+  await new Promise(resolve => setTimeout(resolve, 1000))
   await page.close()
   await browser.close()
-  console.log('Browser Closed')
+  console.log('Browser Job details Closed')
 
   return pageHtml
 }

@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express'
-import { getLinkedInScrapQueue } from '@src/tasks/getLinkedInScrapQueue'
+import getLinkedInSearchResultsScrapQueue from '@src/tasks/getLinkedInSearchResultsScrapQueue'
 import addSearchRequest from '@src/services/addSearchRequest'
 import { Site } from '@src/utils/types'
 
 const scrapeLinkedInJobsController = async (req: Request, res: Response) => {
   try {
-    const queue = await getLinkedInScrapQueue()
+    const queue = await getLinkedInSearchResultsScrapQueue()
     const delayedTasks = await queue.getDelayedCount()
 
     if (delayedTasks > 0) {

@@ -18,17 +18,18 @@ const createLinkedInJobDetailsScrapQueue = async (queueName: string): Promise <Q
       const now = Date.now()
       // Skip older than 5min tasks
       if (now - task.timestamp > 60000 * 5) {
-        console.log('Queue process task expired:', task.id, task.data)
+        console.log('Queue process job details task expired:', task.id, task.data)
         throw new Error('Task expired')
       }
 
-      console.log('Queue process task:', task.id, task.data)
+      console.log('Queue process job details task:', task.id, task.data)
       const jobId: string = task.data.jobId
       if (!jobId) {
+        console.log('jobId not found')
         throw new Error('Missing jobId')
       }
       await scrapeLinkedInJobDetails(jobId)
-    }).catch((error) => { console.error('Queue process error:', error) })
+    }).catch((error) => { console.error('Queue job-details-process error:', error) })
 
     return queue
   } catch (error) {
@@ -37,7 +38,7 @@ const createLinkedInJobDetailsScrapQueue = async (queueName: string): Promise <Q
   }
 }
 
-export const getLinkedInJobDetailsScrapQueue = async (): Promise<QueueType> => {
+const getLinkedInJobDetailsScrapQueue = async (): Promise<QueueType> => {
   if (linkedInJobDetailsScrapQueue) {
     return linkedInJobDetailsScrapQueue
   }
@@ -45,3 +46,5 @@ export const getLinkedInJobDetailsScrapQueue = async (): Promise<QueueType> => {
   linkedInJobDetailsScrapQueue = await createLinkedInJobDetailsScrapQueue(LNK_JOB_DETAILS_SCRAP_QUEUE_NAME)
   return linkedInJobDetailsScrapQueue
 }
+
+export default getLinkedInJobDetailsScrapQueue
