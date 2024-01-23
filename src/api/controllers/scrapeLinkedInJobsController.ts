@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { getLinkedInScrapQueue } from '@src/tasks/getLinkedInScrapQueue'
-import saveSearchRequest from '@src/services/saveSearchRequest'
+import addSearchRequest from '@src/services/addSearchRequest'
 import { Site } from '@src/utils/types'
 
 const scrapeLinkedInJobsController = async (req: Request, res: Response) => {
@@ -15,7 +15,7 @@ const scrapeLinkedInJobsController = async (req: Request, res: Response) => {
 
     // todo validate body params
     // Save search request
-    const searchRequestId = await saveSearchRequest({ searchQuery: req.body, site: Site.LinkedIn })
+    const searchRequestId = await addSearchRequest({ searchQuery: req.body, site: Site.LinkedIn })
     await queue.add({ searchRequestId }, { delay: 1000 })
 
     res.status(202).send({ message: 'Action accepted' })

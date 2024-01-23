@@ -1,8 +1,8 @@
-import { type Job, Site } from '@src/utils/types'
-import LinkedInJobModel from '@src/db/models/LinkedInJob'
+import { type Job } from '@src/utils/types'
 import SearchRequestModel from '@src/db/models/SearchRequest'
 import fetchHtml from './fetchHtml'
 import { JSDOM } from 'jsdom'
+import addLinkedInJob from '@src/services/addLinkedInJob'
 
 const parseHtml = async (searchRequestId: string, htmlString: string) => {
   const dom = new JSDOM(htmlString)
@@ -19,18 +19,13 @@ const parseHtml = async (searchRequestId: string, htmlString: string) => {
     const location = li.querySelector('.job-search-card__location')?.textContent.trim()
     const postingDate = li.querySelector('.job-search-card__listdate')?.getAttribute('datetime')
 
-    const jobData = new LinkedInJobModel({ searchRequestId, linkedInID, title, company, location, link, postingDate })
-
-    // Save the new object to the database
-    await jobData.save()
-      .then(doc => { console.log('Job saved:', doc) })
-      .catch(err => { console.error('Error saving document:', err) })
+    await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
   })
 
   return jobs
 }
 
-const scrapeJobs = async (searchRequestId: string): Promise<void> => {
+const scrapeLinkedInSearchResults = async (searchRequestId: string): Promise<void> => {
   const searchRequest = await SearchRequestModel.findById(searchRequestId)
 
   if (!searchRequest) {
@@ -44,4 +39,4 @@ const scrapeJobs = async (searchRequestId: string): Promise<void> => {
   await parseHtml(searchRequestId, htmlString)
 }
 
-export default scrapeJobs
+export default scrapeLinkedInSearchResults
