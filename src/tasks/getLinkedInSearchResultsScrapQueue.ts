@@ -1,10 +1,10 @@
 import Queue, { type Queue as QueueType } from 'bull'
-import { MAIN_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './queueConfig'
+import { LNK_SEARCH_SCRAP_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './queueConfig'
 import { scrapeLinkedInSearchResults } from '@src/scrappers/linkedin'
 
-let linkedInScrapQueue: QueueType
+let linkedInSearchResultsScrapQueue: QueueType
 
-const createLinkedInScrapQueue = async (queueName: string): Promise <QueueType> => {
+const createLinkedInSearchResultsScrapQueue = async (queueName: string): Promise <QueueType> => {
   try {
     const queue = new Queue(queueName, {
       redis: {
@@ -37,11 +37,11 @@ const createLinkedInScrapQueue = async (queueName: string): Promise <QueueType> 
   }
 }
 
-export const getLinkedInScrapQueue = async (): Promise<QueueType> => {
-  if (linkedInScrapQueue) {
-    return linkedInScrapQueue
+export const getLinkedInSearchResultsScrapQueue = async (): Promise<QueueType> => {
+  if (linkedInSearchResultsScrapQueue) {
+    return linkedInSearchResultsScrapQueue
   }
 
-  linkedInScrapQueue = await createLinkedInScrapQueue(MAIN_QUEUE_NAME)
-  return linkedInScrapQueue
+  linkedInSearchResultsScrapQueue = await createLinkedInSearchResultsScrapQueue(LNK_SEARCH_SCRAP_QUEUE_NAME)
+  return linkedInSearchResultsScrapQueue
 }

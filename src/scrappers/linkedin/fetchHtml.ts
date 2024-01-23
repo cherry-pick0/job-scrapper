@@ -56,12 +56,42 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
   // await page.screenshot({ path: 'fetchHtml.png' })
 
   // Close the page and browser
-  // await new Promise(() => setTimeout(() => { console.log('done waiting') }, 2000))
   await page.close()
   await browser.close()
   console.log('Browser Closed')
+
+  return pageHtml
+}
+
+export const fetchJobDetails = async (url: string, proxy?: string): Promise<string> => {
+  // wait a little before opening the browser
+  await new Promise(resolve => setTimeout(resolve, 3000))
+
+  // Open the headless browser
+  const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
+  console.log('opening browser')
+  const browser = await puppeteer.launch({ headless: false, args })
+  const page = await browser.newPage()
+  await page.setViewport({ width: 1280, height: 800 })
+
+  // Go to url
+  await page.goto(url)
+
+  // Fetch the page content
+  await page.content()
+
+  // Wait for the job details to be loaded
+  await page.waitForSelector('.description__text description__text--rich', { timeout: 2000 })
+
+  const pageHtml = await page.evaluate(() => {
+    const jobDetails = document.querySelector('.description__text description__text--rich')
+    return jobDetails ? jobDetails.innerHTML : ''
+  })
+
   // Close the page and browser
-  // await new Promise(() => setTimeout(() => { console.log('done waiting') }, 2000))
+  await page.close()
+  await browser.close()
+  console.log('Browser Closed')
 
   return pageHtml
 }

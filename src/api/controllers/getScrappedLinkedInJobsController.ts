@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import getScrappedLinkedJobs from '@src/services/getScrappedLinkedJobs'
+import getScrappedLinkedJobs from '@src/services/getScrappedLinkedInJobs'
 
 const getScrappedLinkedInJobsController = async (req: Request, res: Response) => {
   try {
