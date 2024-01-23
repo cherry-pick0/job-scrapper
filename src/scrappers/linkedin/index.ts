@@ -1,31 +1,9 @@
-import { type Job } from '@src/utils/types'
 import SearchRequestModel from '@src/db/models/SearchRequest'
-import fetchHtml from './fetchHtml'
-import { JSDOM } from 'jsdom'
+import { fetchSearchResults } from './fetchHtml'
 import addLinkedInJob from '@src/services/addLinkedInJob'
+import { parseSearchResultsHtml } from './parseHtml'
 
-const parseHtml = async (searchRequestId: string, htmlString: string) => {
-  const dom = new JSDOM(htmlString)
-  const document = dom.window.document
-
-  const lis = document.querySelectorAll('li')
-  const jobs: Job [] = []
-
-  lis.forEach(async (li: any) => {
-    const linkedInID = li.querySelector('div[data-entity-urn]').getAttribute('data-entity-urn').split(':').pop()
-    const title = li.querySelector('.base-search-card__title')?.textContent.trim()
-    const link = li.querySelector('.base-card__full-link')?.href
-    const company = li.querySelector('.base-search-card__subtitle a')?.textContent.trim()
-    const location = li.querySelector('.job-search-card__location')?.textContent.trim()
-    const postingDate = li.querySelector('.job-search-card__listdate')?.getAttribute('datetime')
-
-    await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
-  })
-
-  return jobs
-}
-
-const scrapeLinkedInSearchResults = async (searchRequestId: string): Promise<void> => {
+export const scrapeLinkedInSearchResults = async (searchRequestId: string): Promise<void> => {
   const searchRequest = await SearchRequestModel.findById(searchRequestId)
 
   if (!searchRequest) {
@@ -35,8 +13,15 @@ const scrapeLinkedInSearchResults = async (searchRequestId: string): Promise<voi
   // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
   const searchUrl = 'https://www.linkedin.com/jobs/search?keywords=Python%20Developer&location=United%20Kingdom&f_WT=2'
   // todo fetch and parse real html
-  const htmlString = await fetchHtml(searchUrl)
-  await parseHtml(searchRequestId, htmlString)
+  const searchResultsHtmlString = await fetchSearchResults(searchUrl)
+  const jobs = await parseSearchResultsHtml(searchRequestId, searchResultsHtmlString)
+
+  jobs.forEach(async (job) => {
+    const { linkedInID, title, company, location, link, postingDate } = job
+    await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
+  })
 }
 
-export default scrapeLinkedInSearchResults
+export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => {
+// todo
+}

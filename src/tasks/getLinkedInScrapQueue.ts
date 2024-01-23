@@ -1,6 +1,6 @@
 import Queue, { type Queue as QueueType } from 'bull'
 import { MAIN_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './queueConfig'
-import scrapeLinkedInJobs from '@src/scrappers/linkedin'
+import { scrapeLinkedInSearchResults } from '@src/scrappers/linkedin'
 
 let linkedInScrapQueue: QueueType
 
@@ -27,7 +27,7 @@ const createLinkedInScrapQueue = async (queueName: string): Promise <QueueType> 
       if (!searchRequestId) {
         throw new Error('Missing searchRequestId')
       }
-      await scrapeLinkedInJobs(searchRequestId)
+      await scrapeLinkedInSearchResults(searchRequestId)
     }).catch((error) => { console.error('Queue process error:', error) })
 
     return queue

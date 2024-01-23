@@ -24,7 +24,7 @@ const scrollPage = async (page: Page) => {
 }
 
 // todo optional: store puppeteer browser instances in cache or db
-const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
+export const fetchSearchResults = async (url: string, proxy?: string): Promise<string> => {
   // wait a little before opening the browser
   await new Promise(resolve => setTimeout(resolve, 3000))
 
@@ -65,5 +65,3 @@ const fetchHtml = async (url: string, proxy?: string): Promise<string> => {
 
   return pageHtml
 }
-
-export default fetchHtml
