@@ -15,8 +15,8 @@ const getLinkedInJobDetails = async (jobId: string) => {
     const jobDetailsObject: any = jobDetails ? jobDetails.toObject() : {}
 
     delete jobObject.__v
-    delete jobDetailsObject._id
     delete jobDetailsObject.__v
+    delete jobDetailsObject._id
 
     const result = {
       ...jobObject,
