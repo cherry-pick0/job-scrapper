@@ -83,11 +83,11 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
   console.log('done fetching content')
 
   // Wait for the job details to be loaded
-  await page.waitForSelector('.description__text', { timeout: 2000 })
-  console.log('description__text is available')
+  await page.waitForSelector('.description', { timeout: 2000 })
+  console.log('description is available')
 
   const pageHtml = await page.evaluate(() => {
-    const jobDetails = document.querySelector('.description__text')
+    const jobDetails = document.querySelector('.description')
     return jobDetails ? jobDetails.innerHTML : ''
   })
 

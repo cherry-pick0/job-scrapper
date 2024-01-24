@@ -27,8 +27,22 @@ export const parseJobDetailsHtml = async (htmlString: string): Promise<JobDetail
   const dom = new JSDOM(htmlString)
   const document = dom.window.document
 
-  const contentDiv = document.querySelector('.show-more-less-html__markup')
-  const textContent = contentDiv?.textContent ?? ''
+  const descriptionDiv = document.querySelector('.show-more-less-html__markup')
+  const fullDescription = descriptionDiv?.textContent ?? ''
 
-  return { level: '', fullDescription: textContent }
+  // Find all <h3> elements
+  const criteriaElements = document.querySelectorAll('h3.description__job-criteria-subheader')
+
+  // Iterate through <h3> elements to find the one with "Seniority level" and get its corresponding <span> value
+  let level = ''
+  criteriaElements.forEach((criteria) => {
+    if (criteria.textContent?.trim() === 'Seniority level') {
+      const span = criteria.nextElementSibling
+      if (span?.classList.contains('description__job-criteria-text')) {
+        level = span.textContent?.trim() ?? ''
+      }
+    }
+  })
+
+  return { level, fullDescription }
 }
