@@ -4,11 +4,14 @@ import { fetchSearchResults, fetchJobDetails } from './fetchHtml'
 import addLinkedInJob from '@src/services/addLinkedInJob'
 import { parseSearchResultsHtml, parseJobDetailsHtml } from './parseHtml'
 import getLinkedInJobDetailsScrapQueue from '@src/tasks/getLinkedInJobDetailsScrapQueue'
+import flagRelevantJobsQueue from '@src/tasks/flagRelevantJobsQueue'
 import addLinkedInJobDetails from '@src/services/addLinkedInJobDetails'
 
 const queueJobDetailsScrap = async (jobId: string): Promise<void> => {
-  const queue = await getLinkedInJobDetailsScrapQueue()
-  await queue.add({ jobId }, { delay: 1000 })
+  const jobDetailsQueue = await getLinkedInJobDetailsScrapQueue()
+  await jobDetailsQueue.add({ jobId }, { delay: 1000 })
+  const flagQueue = await flagRelevantJobsQueue()
+  await flagQueue.add({ jobId }, { delay: 1000 })
 }
 
 export const scrapeLinkedInSearchResults = async (searchRequestId: string): Promise<void> => {

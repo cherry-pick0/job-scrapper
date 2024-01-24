@@ -3,6 +3,7 @@ import { LNK_FLAG_RELEVANT_JOBS_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './que
 let linkedInJobDetailsScrapQueue: QueueType
 
 const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueType> => {
+  console.log('Creating Bull queue:', queueName)
   try {
     const queue = new Queue(queueName, {
       redis: {
@@ -24,7 +25,7 @@ const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueTyp
       const jobId: string = task.data.jobId
       if (!jobId) {
         console.log('jobId not found')
-        throw new Error('Missing jobId')
+        throw new Error('Missing jobId for processing job flagging task')
       }
       // await doSth(jobId)
     }).catch((error) => { console.error('Queue job-flagging-process error:', error) })
