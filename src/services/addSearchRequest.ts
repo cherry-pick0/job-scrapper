@@ -1,10 +1,7 @@
 import type { SearchParams } from '@src/utils/types'
-import getMongoDbClient from '@src/db/getMongoDbClient'
 import SearchRequestModel from '@src/db/models/SearchRequest'
 
 const addSearchRequest = async (searchParams: SearchParams): Promise <string> => {
-  await getMongoDbClient()
-
   const searchRequest = new SearchRequestModel({ searchQuery: searchParams.searchQuery.toString(), site: searchParams.site })
   let searchRequestId: string | undefined
 

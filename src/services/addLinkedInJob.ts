@@ -1,10 +1,6 @@
 import { type Job } from '@src/utils/types'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
-import getMongoDbClient from '@src/db/getMongoDbClient'
-
 const addLinkedInJob = async (searchRequestId: string, job: Job): Promise<string> => {
-  await getMongoDbClient()
-
   const { linkedInID, title, company, location, link, postingDate } = job
   const jobData = new LinkedInJobModel({ searchRequestId, linkedInID, title, company, location, link, postingDate })
   let jobId: string | undefined
