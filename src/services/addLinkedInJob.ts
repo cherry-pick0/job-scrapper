@@ -1,5 +1,6 @@
 import { type Job } from '@src/utils/types'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
+
 const addLinkedInJob = async (searchRequestId: string, job: Job): Promise<string> => {
   const { linkedInID, title, company, location, link, postingDate } = job
   const jobData = new LinkedInJobModel({ searchRequestId, linkedInID, title, company, location, link, postingDate })
