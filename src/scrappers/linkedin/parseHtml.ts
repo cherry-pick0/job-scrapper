@@ -16,11 +16,12 @@ export const parseSearchResultsHtml = async (htmlString: string): Promise<Job[]>
     const location = li.querySelector('.job-search-card__location')?.textContent.trim()
     const postingDate = li.querySelector('.job-search-card__listdate')?.getAttribute('datetime')
 
+    if (!(linkedInID || title || link || company || location || postingDate)) return
+
     jobs.push({ linkedInID, title, company, location, link, postingDate })
   })
 
-  // return jobs
-  return [jobs[0]]
+  return jobs
 }
 
 export const parseJobDetailsHtml = async (htmlString: string): Promise<JobDetails> => {

@@ -25,28 +25,32 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
   // update status
   await updateSearchRequestStatus(searchRequestId, 'In progress')
 
-  // todo validate searchQuery
-  // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
-  const { location, position } = searchRequest.searchParams
-  // remote => 'f_WT=2'
-  // levelMidSenior => 'f_E=4'
-  const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${position}&location=${location}&f_WT=2&f_E=4`
-  // todo fetch and parse real html
-  const searchResultsHtmlString = await fetchSearchResults(searchUrl)
-  const jobs = await parseSearchResultsHtml(searchResultsHtmlString)
+  try {
+    // todo validate searchQuery
+    // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
+    const { location, position } = searchRequest.searchParams
+    // remote => 'f_WT=2'
+    // levelMidSenior => 'f_E=4'
+    const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${position}&location=${location}&f_WT=2&f_E=4`
+    // todo fetch and parse real html
+    const searchResultsHtmlString = await fetchSearchResults(searchUrl)
+    const jobs = await parseSearchResultsHtml(searchResultsHtmlString)
 
-  jobs.forEach(async (job) => {
-    try {
-      const { linkedInID, title, company, location, link, postingDate } = job
-      const jobId = await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
-      await queueJobDetailsScrap(jobId)
-    } catch (e) {
+    jobs.forEach(async (job) => {
+      try {
+        const { linkedInID, title, company, location, link, postingDate } = job
+        const jobId = await addLinkedInJob(searchRequestId, { linkedInID, title, company, location, link, postingDate })
+        await queueJobDetailsScrap(jobId)
+      } catch (e) {
       // todo handle error
-      console.log(e)
-    }
-  })
+        console.log(e)
+      }
+    })
 
-  await updateSearchRequestStatus(searchRequestId, 'Completed')
+    await updateSearchRequestStatus(searchRequestId, 'Completed')
+  } catch (error) {
+    await updateSearchRequestStatus(searchRequestId, 'Error', error?.toString())
+  }
 }
 
 export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => {

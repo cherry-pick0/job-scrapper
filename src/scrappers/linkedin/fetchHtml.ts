@@ -20,7 +20,7 @@ const scrollPage = async (page: Page) => {
         }
       }, 3000)
     })
-  })
+  })// .catch((err) => { console.log('scrollPage error ', err) })
 }
 
 // todo optional: store puppeteer browser instances in cache or db
@@ -33,6 +33,7 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
   console.log('opening browser')
   const browser = await puppeteer.launch({ headless: false, args })
   const page = await browser.newPage()
+  page.on('error', (err) => { console.log('PAGE ERROR ', err) })
   await page.setViewport({ width: 1280, height: 800 })
 
   // Go to url
@@ -46,11 +47,14 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
   await page.content()
 
   // Wait for the jobs list to be loaded
-  await page.waitForSelector('.jobs-search__results-list', { timeout: 2000 })
+  await page.waitForSelector('.jobs-search__results-list123', { timeout: 2000 }).catch(async () => {
+    await browser.close()
+    throw Error('Selector results-list not found')
+  })
 
   // Fetch the HTML of the jobs list
   const pageHtml = await page.evaluate(() => {
-    const jobsList = document.querySelector('.jobs-search__results-list')
+    const jobsList = document.querySelector('.jobs-search__results-list123')
     return jobsList ? jobsList.innerHTML : ''
   })
   // await page.screenshot({ path: 'fetchHtml.png' })
@@ -83,7 +87,10 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
   console.log('done fetching content')
 
   // Wait for the job details to be loaded
-  await page.waitForSelector('.description', { timeout: 2000 })
+  await page.waitForSelector('.description', { timeout: 2000 }).catch(async () => {
+    await browser.close()
+    throw Error('Selector .description not found')
+  })
   console.log('description is available')
 
   const pageHtml = await page.evaluate(() => {
