@@ -22,7 +22,10 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
   }
   // todo validate searchQuery
   // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
-  const searchUrl = 'https://www.linkedin.com/jobs/search?keywords=Python%20Developer&location=United%20Kingdom&f_WT=2'
+  const { location, position } = searchRequest.searchParams
+  // remote => 'f_WT=2'
+  // levelMidSenior => 'f_E=4'
+  const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${position}&location=${location}&f_WT=2&f_E=4`
   // todo fetch and parse real html
   const searchResultsHtmlString = await fetchSearchResults(searchUrl)
   const jobs = await parseSearchResultsHtml(searchResultsHtmlString)

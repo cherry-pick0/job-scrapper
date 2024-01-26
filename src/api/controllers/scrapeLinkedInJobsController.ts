@@ -15,7 +15,13 @@ const scrapeLinkedInJobsController = async (req: Request, res: Response) => {
 
     // todo validate body params
     // Save search request
-    const searchRequestId = await addSearchRequest({ searchQuery: req.body, site: Site.LinkedIn })
+    const { location, seniority_level: seniorityLevel, position, remote } = req.body
+    if (!location || !seniorityLevel || !position) {
+      res.status(400).send({ message: 'Missing required params: location, seniority_level, position, remote' })
+      return
+    }
+
+    const searchRequestId = await addSearchRequest({ location, seniorityLevel, position, remote, site: Site.LinkedIn })
     await queue.add({ searchRequestId }, { delay: 1000 })
 
     res.status(202).send({ message: 'Action accepted' })

@@ -1,8 +1,10 @@
-import type { SearchParams } from '@src/utils/types'
+import type { SearchQuery } from '@src/utils/types'
 import SearchRequestModel from '@src/db/models/SearchRequest'
 
-const addSearchRequest = async (searchParams: SearchParams): Promise <string> => {
-  const searchRequest = new SearchRequestModel({ searchQuery: searchParams.searchQuery.toString(), site: searchParams.site })
+const addSearchRequest = async (searchQuery: SearchQuery): Promise <string> => {
+  const { site, location, seniorityLevel, position, remote } = searchQuery
+  const data = { searchParams: { location, seniorityLevel, position, remote }, site }
+  const searchRequest = new SearchRequestModel(data)
   let searchRequestId: string | undefined
 
   await searchRequest.save()

@@ -1,16 +1,34 @@
 import mongoose from 'mongoose'
 
+const searchParamsSchema = new mongoose.Schema({
+  location: {
+    type: String,
+    required: true
+  },
+  seniorityLevel: {
+    type: String,
+    required: true
+  },
+  position: {
+    type: String,
+    required: true
+  },
+  remote: {
+    type: Boolean,
+    required: true
+  }
+})
+
 const searchRequestSchema = new mongoose.Schema({
   site: {
     type: String, // Or a more specific type if 'Site' is an enum
     required: true,
     enum: ['LinkedIn', 'Indeed']
   },
-  searchQuery: {
-    type: String,
+  searchParams: {
+    type: searchParamsSchema,
     required: true
   },
-  // results: [jobSchema],
   browserPID: Number,
   createdAt: {
     type: Date,
