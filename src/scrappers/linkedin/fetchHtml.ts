@@ -6,7 +6,7 @@ const scrollPage = async (page: Page) => {
     await new Promise<void>((resolve, reject) => {
       let totalHeight = 0
       let scrollCount = 0
-      const maxScrolls = 1
+      const maxScrolls = 5
       const distance = 100 // should be less than or equal to window.innerHeight
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight
@@ -31,7 +31,7 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
   console.log('opening browser')
-  const browser = await puppeteer.launch({ headless: false, args })
+  const browser = await puppeteer.launch({ headless: true, args })
   const page = await browser.newPage()
   page.on('error', (err) => { console.log('PAGE ERROR ', err) })
   await page.setViewport({ width: 1280, height: 800 })
@@ -47,14 +47,15 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
   await page.content()
 
   // Wait for the jobs list to be loaded
-  await page.waitForSelector('.jobs-search__results-list123', { timeout: 2000 }).catch(async () => {
+  await page.waitForSelector('.jobs-search__results-list', { timeout: 2000 }).catch(async () => {
     await browser.close()
+    console.log('Browser Closed')
     throw Error('Selector results-list not found')
   })
 
   // Fetch the HTML of the jobs list
   const pageHtml = await page.evaluate(() => {
-    const jobsList = document.querySelector('.jobs-search__results-list123')
+    const jobsList = document.querySelector('.jobs-search__results-list')
     return jobsList ? jobsList.innerHTML : ''
   })
   // await page.screenshot({ path: 'fetchHtml.png' })
@@ -75,7 +76,7 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
   console.log('opening browser')
-  const browser = await puppeteer.launch({ headless: false, args })
+  const browser = await puppeteer.launch({ headless: true, args })
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 800 })
 
@@ -89,6 +90,7 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
   // Wait for the job details to be loaded
   await page.waitForSelector('.description', { timeout: 2000 }).catch(async () => {
     await browser.close()
+    console.log('Browser Closed')
     throw Error('Selector .description not found')
   })
   console.log('description is available')
