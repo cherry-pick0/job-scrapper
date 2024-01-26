@@ -6,6 +6,7 @@ import { parseSearchResultsHtml, parseJobDetailsHtml } from './parseHtml'
 import getLinkedInJobDetailsScrapQueue from '@src/tasks/getLinkedInJobDetailsScrapQueue'
 import flagRelevantJobsQueue from '@src/tasks/flagRelevantJobsQueue'
 import addLinkedInJobDetails from '@src/services/addLinkedInJobDetails'
+import updateSearchRequestStatus from '@src/services/updateSearchRequestStatus'
 
 const queueJobDetailsScrap = async (jobId: string): Promise<void> => {
   const jobDetailsQueue = await getLinkedInJobDetailsScrapQueue()
@@ -20,6 +21,10 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
   if (!searchRequest) {
     throw new Error('SearchRequest not found, scrapping failed')
   }
+
+  // update status
+  await updateSearchRequestStatus(searchRequestId, 'In progress')
+
   // todo validate searchQuery
   // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
   const { location, position } = searchRequest.searchParams
@@ -40,6 +45,8 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
       console.log(e)
     }
   })
+
+  await updateSearchRequestStatus(searchRequestId, 'Completed')
 }
 
 export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => {

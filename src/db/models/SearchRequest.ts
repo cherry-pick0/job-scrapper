@@ -20,6 +20,15 @@ const searchParamsSchema = new mongoose.Schema({
 })
 
 const searchRequestSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    required: true,
+    enum: ['Pending', 'Error', 'In progress', 'Completed']
+  },
+  error: {
+    type: String,
+    required: false
+  },
   site: {
     type: String, // Or a more specific type if 'Site' is an enum
     required: true,

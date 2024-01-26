@@ -3,7 +3,7 @@ import SearchRequestModel from '@src/db/models/SearchRequest'
 
 const addSearchRequest = async (searchQuery: SearchQuery): Promise <string> => {
   const { site, location, seniorityLevel, position, remote } = searchQuery
-  const data = { searchParams: { location, seniorityLevel, position, remote }, site }
+  const data = { status: 'Pending', searchParams: { location, seniorityLevel, position, remote }, site }
   const searchRequest = new SearchRequestModel(data)
   let searchRequestId: string | undefined
 
