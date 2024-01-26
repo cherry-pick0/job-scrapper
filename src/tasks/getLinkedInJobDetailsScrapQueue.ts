@@ -1,6 +1,7 @@
 import Queue, { type Queue as QueueType } from 'bull'
 import { LNK_JOB_DETAILS_SCRAP_QUEUE_NAME, REDIS_HOST, REDIS_PORT } from './queueConfig'
 import { scrapeLinkedInJobDetails } from '@src/scrappers/linkedin'
+import flagRelevantJobsQueue from './flagRelevantJobsQueue'
 
 let linkedInJobDetailsScrapQueue: QueueType
 
@@ -29,6 +30,9 @@ const createLinkedInJobDetailsScrapQueue = async (queueName: string): Promise <Q
         throw new Error('Missing jobId')
       }
       await scrapeLinkedInJobDetails(jobId)
+      // Flag job for AI processing
+      const flagQueue = await flagRelevantJobsQueue()
+      await flagQueue.add({ jobId }, { delay: 1000 })
     }).catch((error) => { console.error('Queue job-details-process error:', error) })
 
     return queue

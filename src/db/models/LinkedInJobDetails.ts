@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 const linkedInJobDetailsSchema = new mongoose.Schema({
   description: String,
   level: String,
+  flag_ai_process: {
+    type: Boolean,
+    default: undefined
+  },
   jobId: {
     type: Schema.Types.ObjectId,
     ref: 'LinkedInJob'
