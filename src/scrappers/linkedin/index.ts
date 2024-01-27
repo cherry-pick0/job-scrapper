@@ -3,12 +3,12 @@ import LinkedInJobModel from '@src/db/models/LinkedInJob'
 import { fetchSearchResults, fetchJobDetails } from './fetchHtml'
 import addLinkedInJob from '@src/services/addLinkedInJob'
 import { parseSearchResultsHtml, parseJobDetailsHtml } from './parseHtml'
-import getLinkedInJobDetailsScrapQueue from '@src/tasks/getLinkedInJobDetailsScrapQueue'
+import scrapLinkedInJobDetailsQueue from '@src/tasks/scrapLinkedInJobDetailsQueue'
 import addLinkedInJobDetails from '@src/services/addLinkedInJobDetails'
 import updateSearchRequestStatus from '@src/services/updateSearchRequestStatus'
 
 const queueJobDetailsScrap = async (jobId: string): Promise<void> => {
-  const jobDetailsQueue = await getLinkedInJobDetailsScrapQueue()
+  const jobDetailsQueue = await scrapLinkedInJobDetailsQueue()
   await jobDetailsQueue.add({ jobId }, { delay: 1000 })
 }
 

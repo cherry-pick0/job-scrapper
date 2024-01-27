@@ -42,7 +42,7 @@ const createLinkedInJobDetailsScrapQueue = async (queueName: string): Promise <Q
   }
 }
 
-const getLinkedInJobDetailsScrapQueue = async (): Promise<QueueType> => {
+const scrapLinkedInJobDetailsQueue = async (): Promise<QueueType> => {
   if (linkedInJobDetailsScrapQueue) {
     return linkedInJobDetailsScrapQueue
   }
@@ -51,4 +51,4 @@ const getLinkedInJobDetailsScrapQueue = async (): Promise<QueueType> => {
   return linkedInJobDetailsScrapQueue
 }
 
-export default getLinkedInJobDetailsScrapQueue
+export default scrapLinkedInJobDetailsQueue
