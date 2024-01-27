@@ -3,7 +3,6 @@ import SearchRequestModel from '@src/db/models/SearchRequest'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
 
 const flagJobForAIProcessing = async (jobId: string): Promise<void> => {
-  console.log('set flag_ai_process as true for ', jobId)
   const job = await LinkedInJobModel.findById(jobId)
   const jobDetails = await LinkedInJobDetailsModel.findOne({ jobId })
   const searchRequest = await SearchRequestModel.findById(job?.searchRequestId)
@@ -23,8 +22,8 @@ const flagJobForAIProcessing = async (jobId: string): Promise<void> => {
   // Count the number of keywords found in job and jobDetails
   let matchCount = 0
   keywords.forEach(keyword => {
-    if (job.location?.toLowerCase().includes(keyword) ??
-        job.title?.toLowerCase().includes(keyword) ??
+    if (job.location?.toLowerCase().includes(keyword) ||
+        job.title?.toLowerCase().includes(keyword) ||
         jobDetails.level?.toLowerCase().includes(keyword)) {
       matchCount++
     }
@@ -32,8 +31,7 @@ const flagJobForAIProcessing = async (jobId: string): Promise<void> => {
 
   // Calculate match percentage
   const matchPercentage = (matchCount / keywords.length) * 100
-  // todo: find better matchPercentage threshold
-  const isMatch = matchPercentage >= 25
+  const isMatch = matchPercentage >= 50
   jobDetails.flag_ai_process = isMatch
 
   await jobDetails.save()
