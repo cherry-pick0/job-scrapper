@@ -21,7 +21,6 @@ const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueTyp
         throw new Error(`Task ${task.id} expired: ${task.data}`)
       }
 
-      console.log('Queue process job flagging task:', task.id, task.data)
       const jobId: string = task.data.jobId
       if (!jobId) {
         throw new Error('Missing jobId for ai flagging task')

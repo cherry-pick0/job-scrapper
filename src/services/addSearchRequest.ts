@@ -9,7 +9,6 @@ const addSearchRequest = async (searchQuery: SearchQuery): Promise <string> => {
 
   await searchRequest.save()
     .then(doc => {
-      console.log('SearchRequestModel saved:', doc)
       searchRequestId = doc.id
     })
     .catch(err => { console.error('Error saving SearchRequestModel:', err) })

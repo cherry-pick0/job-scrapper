@@ -12,7 +12,6 @@ const updateSearchRequestStatus = async (searchRequestId: string, status: 'Pendi
 
   await searchRequest.save()
     .then(doc => {
-      console.log('SearchRequestModel updated:', doc)
       searchRequestId = doc.id
     })
     .catch(err => { console.error('Error updating SearchRequestModel:', err) })
