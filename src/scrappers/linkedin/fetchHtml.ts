@@ -20,7 +20,7 @@ const scrollPage = async (page: Page) => {
         }
       }, 3000)
     })
-  })// .catch((err) => { console.log('scrollPage error ', err) })
+  })
 }
 
 // todo optional: store puppeteer browser instances in cache or db
@@ -30,10 +30,10 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
 
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
-  console.log('opening browser')
+  console.log('Opening browser')
   const browser = await puppeteer.launch({ headless: true, args })
   const page = await browser.newPage()
-  page.on('error', (err) => { console.log('PAGE ERROR ', err) })
+  page.on('error', (err) => { console.log('Page error ', err) })
   await page.setViewport({ width: 1280, height: 800 })
 
   // Go to url
@@ -41,7 +41,7 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
 
   // Scroll to the bottom of the page
   await scrollPage(page)
-  console.log('done scrolling')
+  console.log('Done scrolling')
 
   // Fetch the page content
   await page.content()
@@ -69,13 +69,12 @@ export const fetchSearchResults = async (url: string, proxy?: string): Promise<s
 }
 
 export const fetchJobDetails = async (url: string, proxy?: string): Promise<string> => {
-  console.log('fetchJobDetails ', url)
   // wait a little before opening the browser
   await new Promise(resolve => setTimeout(resolve, 3000))
 
   // Open the headless browser
   const args = proxy ? [`--proxy-server=${proxy}`] : [] // todo handle proxy errors
-  console.log('opening browser')
+  console.log('Opening browser')
   const browser = await puppeteer.launch({ headless: true, args })
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 800 })
@@ -85,7 +84,7 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
 
   // Fetch the page content
   await page.content()
-  console.log('done fetching content')
+  console.log('Done fetching content')
 
   // Wait for the job details to be loaded
   await page.waitForSelector('.description', { timeout: 2000 }).catch(async () => {
@@ -93,7 +92,6 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
     console.log('Browser Closed')
     throw Error('Selector .description not found')
   })
-  console.log('description is available')
 
   const pageHtml = await page.evaluate(() => {
     const jobDetails = document.querySelector('.description')
@@ -104,7 +102,7 @@ export const fetchJobDetails = async (url: string, proxy?: string): Promise<stri
   await new Promise(resolve => setTimeout(resolve, 1000))
   await page.close()
   await browser.close()
-  console.log('Browser Job details Closed')
+  console.log('Browser Closed')
 
   return pageHtml
 }

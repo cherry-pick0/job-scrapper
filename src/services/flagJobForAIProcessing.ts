@@ -35,8 +35,8 @@ const flagJobForAIProcessing = async (jobId: string): Promise<void> => {
   jobDetails.flag_ai_process = isMatch
 
   await jobDetails.save()
-    .then(doc => {
-      console.log('LinkedInJobDetailsModel flagged for AI processing:', doc)
+    .then(_ => {
+      console.log('LinkedInJob flagged for AI processing: ', jobId)
     })
     .catch(err => { console.error('Error saving LinkedInJobDetailsModel:', err) })
 }

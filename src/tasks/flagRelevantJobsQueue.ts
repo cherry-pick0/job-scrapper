@@ -5,7 +5,6 @@ import flagJobForAIProcessing from '@src/services/flagJobForAIProcessing'
 let linkedInJobDetailsScrapQueue: QueueType
 
 const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueType> => {
-  console.log('Creating Bull queue:', queueName)
   try {
     const queue = new Queue(queueName, {
       redis: {
@@ -19,15 +18,13 @@ const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueTyp
       const now = Date.now()
       // Skip older than 5min tasks
       if (now - task.timestamp > 60000 * 5) {
-        console.log('Queue process job flagging task expired:', task.id, task.data)
-        throw new Error('Task expired')
+        throw new Error(`Task ${task.id} expired: ${task.data}`)
       }
 
       console.log('Queue process job flagging task:', task.id, task.data)
       const jobId: string = task.data.jobId
       if (!jobId) {
-        console.log('jobId not found')
-        throw new Error('Missing jobId for processing job flagging task')
+        throw new Error('Missing jobId for ai flagging task')
       }
       await flagJobForAIProcessing(jobId)
     }).catch((error) => { console.error('Queue job-flagging-process error:', error) })

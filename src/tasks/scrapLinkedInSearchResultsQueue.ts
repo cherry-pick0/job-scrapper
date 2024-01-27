@@ -18,11 +18,9 @@ const createLinkedInSearchResultsScrapQueue = async (queueName: string): Promise
       const now = Date.now()
       // Skip older than 1min tasks
       if (now - task.timestamp > 60000) {
-        console.log('Queue process task expired:', task.id, task.data)
-        throw new Error('Task expired')
+        throw new Error(`Task ${task.id} expired: ${task.data}`)
       }
 
-      console.log('Queue process task:', task.id, task.data)
       const searchRequestId: string = task.data.searchRequestId
       if (!searchRequestId) {
         throw new Error('Missing searchRequestId')

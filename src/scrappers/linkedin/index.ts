@@ -23,13 +23,12 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
   await updateSearchRequestStatus(searchRequestId, 'In progress')
 
   try {
-    // todo validate searchQuery
-    // const searchUrl = `https://www.linkedin.com/jobs/search?${searchRequest.searchQuery}`
+    // todo validate search request parameters
     const { location, position } = searchRequest.searchParams
     // remote => 'f_WT=2'
     // levelMidSenior => 'f_E=4'
     const searchUrl = `https://www.linkedin.com/jobs/search?keywords=${position}&location=${location}&f_WT=2&f_E=4`
-    // todo fetch and parse real html
+
     const searchResultsHtmlString = await fetchSearchResults(searchUrl)
     const jobs = await parseSearchResultsHtml(searchResultsHtmlString)
 
@@ -51,7 +50,6 @@ export const scrapeLinkedInSearchResults = async (searchRequestId: string): Prom
 }
 
 export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => {
-  console.log('scrapeLinkedInJobDetails ', jobId)
   const job = await LinkedInJobModel.findById(jobId)
 
   if (!job) {
@@ -66,6 +64,5 @@ export const scrapeLinkedInJobDetails = async (jobId: string): Promise<void> => 
 
   const htmlString = await fetchJobDetails(jobLink)
   const details = await parseJobDetailsHtml(htmlString)
-  const jobDetailsId = await addLinkedInJobDetails(jobId, details)
-  console.log('saved jobDetails ', jobDetailsId)
+  await addLinkedInJobDetails(jobId, details)
 }

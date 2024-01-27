@@ -9,7 +9,6 @@ const addLinkedInJob = async (searchRequestId: string, job: Job): Promise<string
   // Save the new object to the database
   await jobData.save()
     .then(doc => {
-      console.log('LinkedInJobModel saved:', doc)
       jobId = doc.id
     })
     .catch(err => { console.error('Error saving LinkedInJobModel:', err) })

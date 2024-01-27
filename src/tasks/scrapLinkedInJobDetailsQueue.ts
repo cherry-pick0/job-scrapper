@@ -19,17 +19,15 @@ const createLinkedInJobDetailsScrapQueue = async (queueName: string): Promise <Q
       const now = Date.now()
       // Skip older than 5min tasks
       if (now - task.timestamp > 60000 * 5) {
-        console.log('Queue process job details task expired:', task.id, task.data)
-        throw new Error('Task expired')
+        throw new Error(`Task ${task.id} expired: ${task.data}`)
       }
 
-      console.log('Queue process job details task:', task.id, task.data)
       const jobId: string = task.data.jobId
       if (!jobId) {
-        console.log('jobId not found')
         throw new Error('Missing jobId')
       }
       await scrapeLinkedInJobDetails(jobId)
+
       // Flag job for AI processing
       const flagQueue = await flagRelevantJobsQueue()
       await flagQueue.add({ jobId }, { delay: 1000 })

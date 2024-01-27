@@ -5,7 +5,6 @@ import runLinkedInJobAIProcessing from '@src/services/runLinkedInJobAIProcessing
 let linkedInJobDetailsScrapQueue: QueueType
 
 const createLinkedInJobProcessingQueue = async (queueName: string): Promise <QueueType> => {
-  console.log('Creating Bull queue:', queueName)
   try {
     const queue = new Queue(queueName, {
       redis: {
@@ -19,14 +18,11 @@ const createLinkedInJobProcessingQueue = async (queueName: string): Promise <Que
       const now = Date.now()
       // Skip older than 5min tasks
       if (now - task.timestamp > 60000 * 5) {
-        console.log('Queue job processing task expired:', task.id, task.data)
-        throw new Error('Task expired')
+        throw new Error(`Task ${task.id} expired: ${task.data}`)
       }
 
-      console.log('Queue job processing task:', task.id, task.data)
       const jobId: string = task.data.jobId
       if (!jobId) {
-        console.log('jobId not found')
         throw new Error('Missing jobId for ai processing job task')
       }
       await runLinkedInJobAIProcessing(jobId)
