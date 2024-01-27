@@ -3,7 +3,6 @@ import SearchRequestModel from '@src/db/models/SearchRequest'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
 
 const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
-  console.log('runLinkedInJobAIProcessing for ', jobId)
   const job = await LinkedInJobModel.findById(jobId)
   const jobDetails = await LinkedInJobDetailsModel.findOne({ jobId })
   const searchRequest = await SearchRequestModel.findById(job?.searchRequestId)
