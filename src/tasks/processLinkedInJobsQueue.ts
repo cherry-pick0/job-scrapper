@@ -30,8 +30,7 @@ const createLinkedInJobProcessingQueue = async (queueName: string): Promise <Que
 
     return queue
   } catch (error) {
-    console.error('Bull connection error:', error)
-    process.exit(1)
+    throw new Error('Bull connection error')
   }
 }
 

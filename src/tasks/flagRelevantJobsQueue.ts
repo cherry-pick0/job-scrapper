@@ -30,8 +30,7 @@ const createFlagRelevantJobsQueue = async (queueName: string): Promise <QueueTyp
 
     return queue
   } catch (error) {
-    console.error('Bull connection error:', error)
-    process.exit(1)
+    throw new Error('Bull connection error')
   }
 }
 

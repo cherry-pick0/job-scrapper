@@ -16,7 +16,6 @@ const createMongoDbClient = async (): Promise<typeof mongoose> => {
 
     client.connection.on('error', (err) => {
       console.error('MongoDB connection error:', err)
-      process.exit(1)
     })
 
     client.connection.on('disconnected', () => {
@@ -26,7 +25,6 @@ const createMongoDbClient = async (): Promise<typeof mongoose> => {
     return client
   } catch (error) {
     console.error('MongoDB connection error:', error)
-    process.exit(1)
   }
 }
 

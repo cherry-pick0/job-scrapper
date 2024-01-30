@@ -1,6 +1,7 @@
 import LinkedInJobDetailsModel from '@src/db/models/LinkedInJobDetails'
 import SearchRequestModel from '@src/db/models/SearchRequest'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
+import getDataAIProcessingProxy from '@src/proxies/getDataAIProcessingProxy'
 
 const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
   const job = await LinkedInJobModel.findById(jobId)
@@ -15,7 +16,19 @@ const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
     throw new Error('Job not flagged for AI processing')
   }
 
-  // todo
+  if (!jobDetails.description) {
+    throw new Error('Job description not found')
+  }
+
+  const dataAIProcessingProxy = await getDataAIProcessingProxy()
+  const summarizedText = await dataAIProcessingProxy.summarizeText(jobDetails.description)
+  jobDetails.ai_summarized_description = summarizedText
+
+  await jobDetails.save()
+    .then(_ => {
+      console.log('Job description summarized with AI: ', jobId)
+    })
+    .catch(err => { console.error('Error saving LinkedInJobDetailsModel:', err) })
 }
 
 export default runLinkedInJobAIProcessing

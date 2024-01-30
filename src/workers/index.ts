@@ -19,7 +19,8 @@ export const scheduleLinkedInJobAIProcessing = () => {
       const queue = await processLinkedInJobsQueue()
 
       for (const jobId of jobIds) {
-        await queue.add({ jobId: jobId?.toString() })
+        if (!jobId) continue
+        await queue.add({ jobId })
       }
     } catch (err) {
       console.error('Error on scheduleLinkedInJobAIProcessing:', err)

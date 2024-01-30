@@ -3,6 +3,10 @@ const Schema = mongoose.Schema
 
 const linkedInJobDetailsSchema = new mongoose.Schema({
   description: String,
+  ai_summarized_description: {
+    type: String,
+    default: undefined
+  },
   level: String,
   flag_ai_process: {
     type: Boolean,
