@@ -1,7 +1,7 @@
 import LinkedInJobDetailsModel from '@src/db/models/LinkedInJobDetails'
 import SearchRequestModel from '@src/db/models/SearchRequest'
 import LinkedInJobModel from '@src/db/models/LinkedInJob'
-import getDataAIProcessingProxy from '@src/proxies/getDataAIProcessingProxy'
+import getDataAIProcessingProxy from '@src/proxies/dataAIProcessingProxy'
 
 const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
   const job = await LinkedInJobModel.findById(jobId)
@@ -21,7 +21,7 @@ const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
   }
 
   const dataAIProcessingProxy = await getDataAIProcessingProxy()
-  const summarizedText = await dataAIProcessingProxy.summarizeText(jobDetails.description)
+  const summarizedText = await dataAIProcessingProxy.client.summarizeText(jobDetails.description)
   jobDetails.ai_summarized_description = summarizedText
 
   await jobDetails.save()
