@@ -25,6 +25,7 @@ const createMongoDbClient = async (): Promise<typeof mongoose> => {
     return client
   } catch (error) {
     console.error('MongoDB connection error:', error)
+    throw error
   }
 }
 

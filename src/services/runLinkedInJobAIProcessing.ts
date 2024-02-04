@@ -21,8 +21,10 @@ const runLinkedInJobAIProcessing = async (jobId: string): Promise<void> => {
   }
 
   const dataAIProcessingProxy = await getDataAIProcessingProxy()
-  const summarizedText = await dataAIProcessingProxy.client.summarizeText(jobDetails.description)
-  jobDetails.ai_summarized_description = summarizedText
+  const response = await dataAIProcessingProxy.summarizeText(jobDetails.description)
+  jobDetails.ai_summarized_description = response.summarized_text
+  // todo find a better way
+  jobDetails.flag_ai_process = false
 
   await jobDetails.save()
     .then(_ => {

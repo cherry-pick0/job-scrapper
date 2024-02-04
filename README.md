@@ -69,7 +69,7 @@ yarn dev
 
   ```
   curl --request POST \
-    --url 'http://localhost:3000/api/jobs/scrape/linkedin' \
+    --url 'http://localhost:3001/api/jobs/scrape/linkedin' \
     --header 'content-type: application/json' \
     --data '{"location": "Ireland",
   "seniority_level": "Mid/Senior",
@@ -82,7 +82,7 @@ yarn dev
 
   ```
   curl --request GET \
-    --url http://localhost:3000/api/jobs/search-requests \
+    --url http://localhost:3001/api/jobs/search-requests \
     --header 'content-type: application/json'
   ```
 
@@ -90,12 +90,12 @@ yarn dev
 
   ```
   curl --request GET \
-    --url http://localhost:3000/api/jobs/linkedin-jobs \
+    --url http://localhost:3001/api/jobs/linkedin-jobs \
     --header 'content-type: application/json'
   ```
 
   ```
   curl --request GET \
-  --url http://localhost:3000/api/jobs/linkedin-jobs/{id} \
+  --url http://localhost:3001/api/jobs/linkedin-jobs/{id} \
   --header 'content-type: application/json'
   ```
